@@ -2,7 +2,7 @@
 //   (for some obscure reason)
 
 #include <std_lib_facilities.h>
-vector<char> create()
+vector<vector<char>> create()
 {
 	string setting;
 	int type;
@@ -35,11 +35,11 @@ vector<char> create()
 		check[random] = 0;
 	}
 
-	vector<char> result;
+	vector<vector<char>> result;
 
 	for (int i = 0; i < 4; ++i)
 	{
-		result.push_back(number[i] + type);
+		result[1].push_back(number[i] + type);
 	}
 	return result;
 }
@@ -95,48 +95,91 @@ try
 	cout << " Do you want play ? [Y/N] : ";
 	cin >> GameOver;
 	while (GameOver == 'Y')
-	{
-		cout << "Write the mount of players : ";
+	{	
+		string gamemode;
+		int mount = 1;
+		int first = 1;
 
-		int mount;
-		cin >> mount;
+		cout << "Choose your gamemode. " << endl;
+		cout << "PVE or PVP : ";
+		cin >> gamemode;
+
+		vector<vector<char>> number;
+
+		if (gamemode == "PVP")
+		{
+			cout << "Write the mount of players : ";
+			vector<vector<char>> number;
+			cin >> mount;
+			cout << "Choose your language [A-Z]/[0-9] : ";
+			cin >> gamemode;
+			for (int i = 0; i < mount; ++i)
+			{
+				cout << i + 1 << "players" << endl;
+				number[i] = user_guess();
+			}
+			number.resize(mount);
+		}
+		else
+			vector<vector<char>> number = create();
+			
+
 
 		srand(time(NULL));
 
 		vector<vector<char>> uguess;
-		vector<char> number = create();
-
-		for (int info = 1; info <= mount; ++info)
+		for (int i = 0; 1; i)
 		{
-			for (int i = 0; 1; i)
-			{
-				vector<int> bulls(10, 0);
-				vector<int> cows(10, 0);
+			vector<int> bulls(mount, 0);
+			vector<int> cows(mount, 0);
 
-				for (int j = 0; j < mount; ++j)
+			for (int j = 0; j < mount; ++j)
+			{
+				cout << j+1 << " Players";
+				char elem;
+				for (int i = 0; i < 4; ++i)
 				{
-					cout << j << " Players";
-					uguess[j] = user_guess();
-				}
-				for (int j = 0; j < mount; ++j)
-				{
-					for (int i = 0; i < uguess.size(); ++i)
+					cin >> elem;
+					cout << 1;
+					uguess[j].push_back(elem);
+					if (first == 1)
 					{
-						if (i != uguess.size())
-							if (uguess[j][i] == uguess[j + 1][i]) ++bulls[j];
-							else if (count(uguess[+1], uguess[info][i]) == 1) ++cows[j];
-							else
-								if (uguess[info][i] == uguess[0][i]) ++bulls[j];
-								else if (count(uguess[0], uguess[info][i]) == 1) ++cows[j];
+						number[j].push_back(elem);
+						first = 0;
 					}
-					cout << j + 1 << " Players " << "Bulls : " << bulls[j] << "\n"
-						<< j + 1 << " Players " << "Cows : " << cows[j] << endl;
+							
 				}
 			}
-			cout << "Do you want play again?[Y/N]";
+
+		
+			for (int j = 0; j < mount; ++j)
+			{
+				for (int i = 0; i < uguess[j].size(); ++i)
+				{
+					if (j != uguess[j].size())
+						if (uguess[j][i] == number[j + 1][i]) ++bulls[j];
+						else if (count(uguess[j + 1], uguess[j][i]) == 1) ++cows[j];
+						else
+							if (uguess[j][i] == uguess[0][i]) ++bulls[j];
+							else if (count(uguess[0], uguess[j][i]) == 1) ++cows[j];
+				}
+				cout << j + 1 << " Players " << "Bulls : " << bulls[j] << "\n"
+					<< j + 1 << " Players " << "Cows : " << cows[j] << endl;
+
+				if (bulls[j] == 4)
+				{
+					cout << "Player " << j + 1 << " win";
+					for (int i = 0; i < mount; ++i)
+						if (i != j)
+							cout << "Player" << j + 1 << " lose";
+				}
+			}
 		}
 	}
+			cout << "Do you want play again?[Y/N]";
 }
+
+
 catch (exception& e)
 {
 	cerr << e.what() << endl;
