@@ -110,10 +110,11 @@ try
 		int bulls{0};
 		int firstInput = 1;
 		int pvp = 0;
+		int hardmode = 0;
 
 		vector<char> number = create();
 
-		while (gamemode != "PVP" || gamemode != "PVE")
+		while ((gamemode != "PVP") || (gamemode != "PVE") || (gamemode !="hardmode"))
 		{
 			cout << "Unknown gamemode" << "\n";
 			cout << "Choose your game mode. PVP or PVE : ";
@@ -167,7 +168,7 @@ try
 				cout << "Bulls : " << bulls << "\n"
 					<< "Cows : " << cows << endl;
 			}
-			else
+			else if(pvp == 1)
 			{
 				for (int i = 0; i < uguess1.size(); ++i)
 				{
@@ -192,7 +193,44 @@ try
 					<< "Bulls : " << bulls << "\n"
 					<< "Cows : " << cows << endl;
 			}
+			else
+			{
+				vector<char>  bullsCount;
+				vector<char>  cowsCount;
+				vector<char>  compOutput(4, 0);
 
+				if (number[0] < 65)
+				{
+					for (int i = 0; i < 10; ++i) bullsCount.push_back(i + 48);
+				}
+				else
+				{
+					for (int i = 0; i < 26; ++i) bullsCount.push_back(i + 65);
+				}
+				int i = 0;
+				while (cowsCount.size() != 4)
+				{
+					if (count(uguess, bullsCount[i]) == 1) cowsCount.push_back(bullsCount[i]);
+					++i;
+				}
+				int j = 0;
+				while (cowsCount.size() != 0)
+				{
+					while (compOutput[j] == 0)
+					{
+						if (compOutput[j] == cowsCount[i])
+						{
+							compOutput[j] = cowsCount[i];
+							cowsCount.pop_back();
+							--i;
+						}
+					}
+					++j;
+				}
+				for (int i = 0; i < 4; ++i) cout << compOutput[i];
+
+				bulls = 4;
+			}
 		}
 		cout << "Do you want play again?[Y/N]";
 		cin >> GameOver;
