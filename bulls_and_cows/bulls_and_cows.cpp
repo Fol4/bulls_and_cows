@@ -2,7 +2,7 @@
 //   (for some obscure reason)
 
 #include <std_lib_facilities.h>
-vector<vector<char>> create()
+vector<char> create()
 {
 	string setting;
 	int type;
@@ -10,6 +10,8 @@ vector<vector<char>> create()
 
 	cout << "Choose your language [A-Z]/[0-9] : ";
 	cin >> setting;
+
+	while(setting != "[A-Z]" || setting != "[0-9]")
 
 	if (setting == "[A-Z]")
 	{
@@ -35,13 +37,15 @@ vector<vector<char>> create()
 		check[random] = 0;
 	}
 
-	vector<vector<char>> result;
+	vector<char> result;
 
 	for (int i = 0; i < 4; ++i)
 	{
-		result[1].push_back(number[i] + type);
+		result.push_back(number[i] + type);
 	}
+
 	return result;
+
 }
 
 int count(const vector<char>& digits, char c)
@@ -94,92 +98,106 @@ try
 
 	cout << " Do you want play ? [Y/N] : ";
 	cin >> GameOver;
-	while (GameOver == 'Y')
-	{	
-		string gamemode;
-		int mount = 1;
-		int first = 1;
 
-		cout << "Choose your gamemode. " << endl;
-		cout << "PVE or PVP : ";
+	while (GameOver == 'Y')
+	{
+		srand(time(NULL));
+		string gamemode;
+
+		cout << "Choose your game mode. PVP or PVE : ";
 		cin >> gamemode;
 
-		vector<vector<char>> number;
+		int bulls{0};
+		int firstInput = 1;
+		int pvp = 0;
+
+		vector<char> number = create();
+
+		while (gamemode != "PVP" || gamemode != "PVE")
+		{
+			cout << "Unknown gamemode" << "\n";
+			cout << "Choose your game mode. PVP or PVE : ";
+			cin >> gamemode;
+		}
 
 		if (gamemode == "PVP")
+			pvp = 1;
+
+		while (bulls != 4)
 		{
-			cout << "Write the mount of players : ";
-			vector<vector<char>> number;
-			cin >> mount;
-			cout << "Choose your language [A-Z]/[0-9] : ";
-			cin >> gamemode;
-			for (int i = 0; i < mount; ++i)
+			bulls = 0;
+			int cows{};
+
+			vector<char> uguess;
+			vector<char> uguessInputFirstPlayer;
+			vector<char> uguessInputSecondPlayer;
+			vector<char> uguess1;
+			vector<char> uguess2;
+
+			if (pvp == 1)
 			{
-				cout << i + 1 << "players" << endl;
-				number[i] = user_guess();
+				if (firstInput == 1)
+				{
+					cout << "First Player " << "\n";
+					uguessInputFirstPlayer = user_guess();
+
+					cout << "Second Player " << "\n";
+					uguessInputSecondPlayer = user_guess();
+
+					firstInput = 0;
+				}
+
+				cout << "First Player " << "\n";
+				uguess1 = user_guess();
+
+				cout << "Second Player " << "\n";
+				uguess2 = user_guess();
 			}
-			number.resize(mount);
+			else
+				uguess = user_guess();
+
+			if (pvp == 0)
+			{
+				for (int i = 0; i < uguess.size(); ++i)
+				{
+					if (uguess[i] == number[i]) ++bulls;
+					else if ((number, uguess[i]) == 1) ++cows;
+				}
+
+				cout << "Bulls : " << bulls << "\n"
+					<< "Cows : " << cows << endl;
+			}
+			else
+			{
+				for (int i = 0; i < uguess1.size(); ++i)
+				{
+					if (uguess1[i] == uguessInputSecondPlayer[i]) ++bulls;
+					else if (count(uguessInputSecondPlayer, uguess1[i]) == 1) ++cows;
+				}
+
+				cout <<"First player :" << "\n"
+					<<  "Bulls : " << bulls << "\n"
+					<< "Cows : " << cows << endl;
+
+				bulls = 0;
+				cows = 0;
+
+				for (int i = 0; i < uguess2.size(); ++i)
+				{
+					if (uguess2[i] == uguessInputFirstPlayer[i]) ++bulls;
+					else if (count(uguessInputFirstPlayer, uguess2[i]) == 1) ++cows;
+				}
+
+				cout << "Second player :" << "\n"
+					<< "Bulls : " << bulls << "\n"
+					<< "Cows : " << cows << endl;
+			}
+
 		}
-		else
-			vector<vector<char>> number = create();
-			
-
-
-		srand(time(NULL));
-
-		vector<vector<char>> uguess;
-		for (int i = 0; 1; i)
-		{
-			vector<int> bulls(mount, 0);
-			vector<int> cows(mount, 0);
-
-			for (int j = 0; j < mount; ++j)
-			{
-				cout << j+1 << " Players";
-				char elem;
-				for (int i = 0; i < 4; ++i)
-				{
-					cin >> elem;
-					cout << 1;
-					uguess[j].push_back(elem);
-					if (first == 1)
-					{
-						number[j].push_back(elem);
-						first = 0;
-					}
-							
-				}
-			}
-
-		
-			for (int j = 0; j < mount; ++j)
-			{
-				for (int i = 0; i < uguess[j].size(); ++i)
-				{
-					if (j != uguess[j].size())
-						if (uguess[j][i] == number[j + 1][i]) ++bulls[j];
-						else if (count(uguess[j + 1], uguess[j][i]) == 1) ++cows[j];
-						else
-							if (uguess[j][i] == uguess[0][i]) ++bulls[j];
-							else if (count(uguess[0], uguess[j][i]) == 1) ++cows[j];
-				}
-				cout << j + 1 << " Players " << "Bulls : " << bulls[j] << "\n"
-					<< j + 1 << " Players " << "Cows : " << cows[j] << endl;
-
-				if (bulls[j] == 4)
-				{
-					cout << "Player " << j + 1 << " win";
-					for (int i = 0; i < mount; ++i)
-						if (i != j)
-							cout << "Player" << j + 1 << " lose";
-				}
-			}
-		}
+		cout << "Do you want play again?[Y/N]";
+		cin >> GameOver;
 	}
-			cout << "Do you want play again?[Y/N]";
 }
-
-
 catch (exception& e)
 {
 	cerr << e.what() << endl;
