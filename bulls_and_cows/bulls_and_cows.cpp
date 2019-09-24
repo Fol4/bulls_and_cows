@@ -4,21 +4,18 @@
 #include <std_lib_facilities.h>
 vector<char> create()
 {
-	string setting;
-	int type;
-	int range;
+	string gamemode = "0"; 
+	int type; // first element in alphabet in ASCII
+	int range; // amount elements in alphabet
 
-	cout << "Choose your language [A-Z]/[0-9] : ";
-	cin >> setting;
-
-	while ((setting != "[A-Z]") && (setting != "[0-9]"))
+	while ((gamemode != "[A-Z]") && (gamemode != "[0-9]"))
 	{
 		cout << "Unkown language" << "\n";
 		cout << "Choose your language [A-Z]/[0-9] : ";
-		cin >> setting;
+		cin >> gamemode;
 	}
 
-	if (setting == "[A-Z]")
+	if (gamemode == "[A-Z]")
 	{
 		type = 65;
 		range = 26;
@@ -156,13 +153,7 @@ void player_vs_comp()
 		bulls = 0;
 		int cows{};
 
-		vector<char> uguess;
-		vector<char> uguessInputFirstPlayer;
-		vector<char> uguessInputSecondPlayer;
-		vector<char> uguess1;
-		vector<char> uguess2;
-
-		uguess = user_guess();
+		vector<char> uguess = user_guess();
 
 		for (int i = 0; i < uguess.size(); ++i)
 		{
@@ -176,11 +167,8 @@ void player_vs_comp()
 	}
 }
 
-int main()
-try
+void greeting()
 {
-	srand(time(NULL));
-
 	cout << " << Bulls and Cows" << "\n"
 		<< " Computer sets a number or capital letters of 4 unique digits" << "\n"
 		<< " Try to guess it." << "\n"
@@ -188,6 +176,28 @@ try
 		<< " <Cow> means right digit or letters in the wrong position" << "\n"
 		<< "\n"
 		<< " Game is on" << endl;
+}
+
+void mode_selection()
+{
+	string gamemode = "0";
+
+	while ((gamemode != "1") && (gamemode != "2") && (gamemode != "3"))
+	{
+		cout << "Choose your game mode : " << "\n"
+			<< "1) Player VS Player." << "\n"
+			<< "2) Player VS Comp." << "\n"
+			<< "3) ??? " << endl;
+		cin >> gamemode;
+	}
+
+	if (gamemode == "1") player_vs_player();
+	else if (gamemode == "2") player_vs_comp();
+}
+
+void game_process()
+{
+	greeting();
 
 	char GameOver = 'Y';
 
@@ -196,23 +206,17 @@ try
 
 	while (GameOver == 'Y')
 	{
-		string gamemode = "0";
-
-		while ((gamemode != "1") && (gamemode != "2") && (gamemode != "3"))
-		{
-			cout << "Choose your game mode : " << "\n"
-				<< "1) Player VS Player." << "\n"
-				<< "2) Player VS Comp." << "\n"
-				<< "3) ??? " << endl;
-			cin >> gamemode;
-		}
-
-		if (gamemode == "1") player_vs_player();
-		else if (gamemode == "2") player_vs_comp();
-
-		cout << "Do you want play again?[Y/N]";
+		mode_selection();
+		cout << "Do you want play again? [Y/N] : ";
 		cin >> GameOver;
 	}
+}
+
+int main()
+try
+{
+	srand(time(NULL));
+	game_process();
 }
 catch (exception& e)
 {
