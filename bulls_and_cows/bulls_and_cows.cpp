@@ -118,7 +118,6 @@ void good_alghoritm()
 		randomNumber = rand() % allNumber.size();
 		for (int i = 0; i < 4; ++i) cout << allNumber[randomNumber][i];
 		cout << endl;
-		cout << allNumber.size() << endl;
 
 		cout << "Bulls :";
 		cin >> bulls;
