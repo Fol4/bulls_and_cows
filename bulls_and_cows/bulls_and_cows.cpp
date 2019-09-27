@@ -3,16 +3,15 @@
 
 #include <std_lib_facilities.h>
 vector<char> create()
-{
-	string gamemode; 
+{ 
 	int type  = 48; // first element in alphabet in ASCII
 	int range = 10; // amount elements in alphabet
-
+	const int vectorSize = 4; // lenght vector
 
 	vector<int> number{ rand() % range };
 	vector<int> check(range, 1); // vector for check uniquie
 
-	for (int i = 1; i < 4; ++i)
+	for (int i = 1; i < vectorSize; ++i)
 	{
 		int random = rand() % range;
 		while (check[random] == 0)
@@ -24,7 +23,7 @@ vector<char> create()
 
 	vector<char> result;
 
-	for (int i = 0; i < 4; ++i) // translate from int to char
+	for (int i = 0; i < vectorSize; ++i) // translate from int to char
 	{
 		result.push_back(number[i] + type);
 	}
@@ -82,11 +81,15 @@ void good_alghoritm()
 	int randomNumber;
 	char bulls = 0;
 	char cows;
+	const int countDigits = 10;
+	const char wins = '4';
+	const int vectorSize = 4;
+	const int type = 48; // first element in alphabet in ASCII
 
-	for (int i1 = 0; i1 < 10; ++i1) // full vector
-		for (int i2 = 0; i2 < 10 ; ++i2)
-			for (int i3 = 0; i3 < 10; ++i3)
-				for (int i4 = 0; i4 < 10 ; ++i4)
+	for (int i1 = 0; i1 < countDigits; ++i1) // full vector
+		for (int i2 = 0; i2 < countDigits ; ++i2)
+			for (int i3 = 0; i3 < countDigits; ++i3)
+				for (int i4 = 0; i4 < countDigits ; ++i4)
 				{
 					if ((i1 != i2) && (i1 != i3) && (i1 != i4) && (i2 != i3) && (i2 != i4) && (i3 != i4))
 					{
@@ -99,10 +102,10 @@ void good_alghoritm()
 					}
 				}
 
-		while (bulls != 4)
+		while (bulls != wins)
 		{
 			randomNumber = rand() % allNumbers.size();
-			for (int i = 0; i < 4; ++i) cout << allNumbers[randomNumber][i];
+			for (int i = 0; i < vectorSize; ++i) cout << allNumbers[randomNumber][i];
 			cout << endl;
 
 			cout << "Bulls :";
@@ -117,14 +120,14 @@ void good_alghoritm()
 			if (cows == 'e')
 				break;
 
-			int bulls1 = bulls - 48;
-			int cows1 = cows - 48;
+			int bulls1 = bulls - type;
+			int cows1 = cows - type;
 
 			for (int i = 0; i < allNumbers.size(); ++i)
 			{
 				int newBulls = 0;
 				int newCows = 0;
-				for (int j = 0; j < 4; ++j)
+				for (int j = 0; j < vectorSize; ++j)
 					if (allNumbers[randomNumber][j] == allNumbers[i][j]) ++newBulls;
 					else if (count(allNumbers[randomNumber], allNumbers[i][j]) == 1) ++newCows;
 				if ((newBulls == bulls1) && (newCows == cows1))
@@ -143,11 +146,13 @@ void test()
 	int randomNumber;
 	int bulls = 0;
 	int cows;
+	const int countDigits = 10;
+	const int wins = 4;
 
-	for (int i1 = 0; i1 < 10; ++i1) // full vector
-		for (int i2 = 0; i2 < 10; ++i2)
-			for (int i3 = 0; i3 < 10; ++i3)
-				for (int i4 = 0; i4 < 10; ++i4)
+	for (int i1 = 0; i1 < countDigits; ++i1) // full vector
+		for (int i2 = 0; i2 < countDigits; ++i2)
+			for (int i3 = 0; i3 < countDigits; ++i3)
+				for (int i4 = 0; i4 < countDigits; ++i4)
 				{
 					if ((i1 != i2) && (i1 != i3) && (i1 != i4) && (i2 != i3) && (i2 != i4) && (i3 != i4))
 					{
@@ -162,7 +167,7 @@ void test()
 
 	vector<char> uguess = user_guess();
 
-	while (bulls != 4)
+	while (bulls != wins)
 	{
 		randomNumber = rand() % allNumbers.size();
 		for (int i = 0; i < 4; ++i) cout << allNumbers[randomNumber][i];
@@ -198,7 +203,9 @@ void player_vs_player()
 {
 	int bulls = 0;
 	int firstInput = 1;
-	while (bulls != 4)
+	int wins = 4;
+
+	while (bulls != wins)
 	{
 		bulls = 0;
 		int cows{};
@@ -269,9 +276,10 @@ void player_vs_comp()
 {	
 	vector<char> number = create();
 	int bulls = 0;
+	int wins = 4;
 
 	for (int i = 0; i < number.size(); ++i) cout << number[i];
-	while (bulls != 4)
+	while (bulls != wins)
 	{
 		bulls = 0;
 		int cows{};
@@ -307,7 +315,11 @@ void greeting()
 
 void mode_selection()
 {
-	string gamemode ;
+	char gamemode ;
+	const char PlayerVSplayer = '1';
+	const char PlayerVScomp = '2';
+	const char SkyNet = '3';
+	const char Test = '4';
 
 	cout << "Choose your game mode : " << "\n"
 		<< "1) Player VS Player." << "\n"
@@ -316,7 +328,7 @@ void mode_selection()
 		<< "4) Test. " << endl;
 	cin >> gamemode;
 
-	while ((gamemode != "1") && (gamemode != "2") && (gamemode != "3") && (gamemode != "4") )
+	while ((gamemode != PlayerVSplayer) && (gamemode != PlayerVScomp) && (gamemode != SkyNet) && (gamemode != Test) )
 	{
 		cout << "Unknown gamemode." << "\n"
 			<< "Choose your game mode : " << "\n"
@@ -327,9 +339,9 @@ void mode_selection()
 			cin >> gamemode;
 	}
 
-	if (gamemode == "1") player_vs_player();
-	else if (gamemode == "2") player_vs_comp();
-	else if (gamemode == "3") good_alghoritm();
+	if (gamemode == PlayerVSplayer) player_vs_player();
+	else if (gamemode == PlayerVScomp) player_vs_comp();
+	else if (gamemode == SkyNet) good_alghoritm();
 	else test();
 }
 
@@ -338,11 +350,12 @@ void game_process()
 	greeting();
 
 	char GameOver = 'Y';
+	char continueGame = 'Y';
 
 	cout << " Do you want play ? [Y/N] : ";
 	cin >> GameOver;
 
-	while (GameOver == 'Y')
+	while (GameOver == continueGame)
 	{
 		mode_selection();
 		cout << "Do you want play again? [Y/N] : ";
