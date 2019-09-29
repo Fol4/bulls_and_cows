@@ -2,20 +2,37 @@
 //   (for some obscure reason)
 
 #include <std_lib_facilities.h>
+
+int random_int(int a ,int b)
+{
+	return (rand() / double(RAND_MAX)) * (b - a) + a;
+}
+
+constexpr int digit_range = 10;
+
+int random_digit()
+{
+	return random_int(0, digit_range);
+}
+
 vector<char> create()
 { 
-	int type  = 48; // first element in alphabet in ASCII
-	int range = 10; // amount elements in alphabet
-	const int vectorSize = 4; // lenght vector
+	const int wordSize = 4; // length vector
+	int random = random_digit();
 
-	vector<int> number{ rand() % range };
-	vector<int> check(range, 1); // vector for check uniquie
+	vector<int> number{ random };
+	vector<int> check(digit_range, 1); // vector for check uniquie
+	check[random] = 0;
 
-	for (int i = 1; i < vectorSize; ++i)
+	for (int i = 1; i < wordSize; ++i)
 	{
-		int random = rand() % range;
+		int random = random_digit();
+
 		while (check[random] == 0)
-			random = rand() % range;
+		{
+			cout << random << endl;
+			random = random_digit();
+		}
 
 		number.push_back(random);
 		check[random] = 0;
@@ -23,9 +40,9 @@ vector<char> create()
 
 	vector<char> result;
 
-	for (int i = 0; i < vectorSize; ++i) // translate from int to char
+	for (int i = 0; i < wordSize; ++i) // translate from int to char
 	{
-		result.push_back(number[i] + type);
+		result.push_back('0' + number[i]);
 	}
 
 	return result;
@@ -71,83 +88,14 @@ vector<char> user_guess()
 		error("invalid input");
 	validate(guess);
 
-	return (guess);
+	return guess;
 }
 
-void good_alghoritm()
+
+vector<vector<char>> permitations()
 {
 	vector<vector<char>> allNumbers;
-	vector<vector<char>> newNumbers;
-	int randomNumber;
-	char bulls = 0;
-	char cows;
 	const int countDigits = 10;
-	const char wins = '4';
-	const int vectorSize = 4;
-	const int type = 48; // first element in alphabet in ASCII
-
-	for (int i1 = 0; i1 < countDigits; ++i1) // full vector
-		for (int i2 = 0; i2 < countDigits ; ++i2)
-			for (int i3 = 0; i3 < countDigits; ++i3)
-				for (int i4 = 0; i4 < countDigits ; ++i4)
-				{
-					if ((i1 != i2) && (i1 != i3) && (i1 != i4) && (i2 != i3) && (i2 != i4) && (i3 != i4))
-					{
-						vector<char> arguments;
-						arguments.push_back(i1 + 48);
-						arguments.push_back(i2 + 48);
-						arguments.push_back(i3 + 48);
-						arguments.push_back(i4 + 48);
-						allNumbers.push_back(arguments);
-					}
-				}
-
-		while (bulls != wins)
-		{
-			randomNumber = rand() % allNumbers.size();
-			for (int i = 0; i < vectorSize; ++i) cout << allNumbers[randomNumber][i];
-			cout << endl;
-
-			cout << "Bulls :";
-			cin >> bulls;
-
-			if (bulls == 'e')
-				break;
-
-			cout << "Cows :";
-			cin >> cows;
-
-			if (cows == 'e')
-				break;
-
-			int bulls1 = bulls - type;
-			int cows1 = cows - type;
-
-			for (int i = 0; i < allNumbers.size(); ++i)
-			{
-				int newBulls = 0;
-				int newCows = 0;
-				for (int j = 0; j < vectorSize; ++j)
-					if (allNumbers[randomNumber][j] == allNumbers[i][j]) ++newBulls;
-					else if (count(allNumbers[randomNumber], allNumbers[i][j]) == 1) ++newCows;
-				if ((newBulls == bulls1) && (newCows == cows1))
-					newNumbers.push_back(allNumbers[i]);
-			}
-
-			allNumbers = newNumbers;
-			newNumbers.clear();
-		}
-}
-
-void test()
-{
-	vector<vector<char>> allNumbers;
-	vector<vector<char>> newNumbers;
-	int randomNumber;
-	int bulls = 0;
-	int cows;
-	const int countDigits = 10;
-	const int wins = 4;
 
 	for (int i1 = 0; i1 < countDigits; ++i1) // full vector
 		for (int i2 = 0; i2 < countDigits; ++i2)
@@ -157,20 +105,80 @@ void test()
 					if ((i1 != i2) && (i1 != i3) && (i1 != i4) && (i2 != i3) && (i2 != i4) && (i3 != i4))
 					{
 						vector<char> arguments;
-						arguments.push_back(i1 + 48);
-						arguments.push_back(i2 + 48);
-						arguments.push_back(i3 + 48);
-						arguments.push_back(i4 + 48);
+						arguments.push_back(i1 + '0');
+						arguments.push_back(i2 + '0');
+						arguments.push_back(i3 + '0');
+						arguments.push_back(i4 + '0');
 						allNumbers.push_back(arguments);
 					}
 				}
+	return allNumbers;
+}
+
+
+void good_alghoritm()
+{
+	vector<vector<char>> allNumbers = permitations();
+	char bulls = 0;
+	char cows;
+	const char wins = '4';
+	const int wordSize = 4;
+
+	while (bulls != wins)
+	{
+		int r = random_int(0,allNumbers.size());
+		for (int i = 0; i < wordSize; ++i) cout << allNumbers[r][i];
+		cout << endl;
+
+		cout << "Bulls :";
+		cin >> bulls;
+
+		if (bulls == 'e')
+			break;
+
+		cout << "Cows :";
+		cin >> cows;
+
+		if (cows == 'e')
+			break;
+
+		int bulls1 = bulls - '0';
+		int cows1 = cows - '0';
+
+		vector<vector<char>> newNumbers;
+
+		for (int i = 0; i < allNumbers.size(); ++i)
+		{
+			int newBulls = 0;
+			int newCows = 0;
+			for (int j = 0; j < wordSize; ++j)
+				if (allNumbers[r][j] == allNumbers[i][j]) ++newBulls;
+				else if (count(allNumbers[r], allNumbers[i][j]) == 1) ++newCows;
+			if ((newBulls == bulls1) && (newCows == cows1))
+				newNumbers.push_back(allNumbers[i]);
+		}
+
+		allNumbers = newNumbers;
+	}
+}
+
+void test()
+{
+	vector<vector<char>> allNumbers = permitations();
+	vector<vector<char>> newNumbers;
+	int randomNumber;
+	int bulls = 0;
+	int cows;
+	const int countDigits = 10;
+	const int wins = 4;
+	const int wordSize = 4;
 
 	vector<char> uguess = user_guess();
 
 	while (bulls != wins)
 	{
 		randomNumber = rand() % allNumbers.size();
-		for (int i = 0; i < 4; ++i) cout << allNumbers[randomNumber][i];
+		for (int i = 0; i < wordSize; ++i) cout << allNumbers[randomNumber][i];
 		cout << endl;
 
 		bulls = 0;
@@ -187,7 +195,7 @@ void test()
 		{
 			int newBulls = 0;
 			int newCows = 0;
-			for (int j = 0; j < 4; ++j)
+			for (int j = 0; j < wordSize; ++j)
 				if (allNumbers[randomNumber][j] == allNumbers[i][j]) ++newBulls;
 				else if (count(allNumbers[randomNumber], allNumbers[i][j]) == 1) ++newCows;
 			if ((newBulls == bulls) && (newCows == cows))
